@@ -15,3 +15,26 @@ ignorePorts = false
 
 [agent]
 expertMode = true
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Bot NEEXT"
+
+[[workflows.workflow]]
+name = "Bot NEEXT"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "node connect.js"
+
+[workflows.workflow.metadata]
+outputType = "console"
