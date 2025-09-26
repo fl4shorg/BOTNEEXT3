@@ -459,6 +459,21 @@ async function handleCommand(sock, message, command, args, from, quoted) {
     
     
 
+        case "status":
+            const statusText = args.join(" ").trim();
+            if (!statusText) {
+                await reply(sock, from, "❌ Use: " + prefix + "status Seu novo status aqui");
+                break;
+            }
+            try {
+                await sock.updateProfileStatus(statusText);
+                await reply(sock, from, `✅ Status atualizado para:\n> _${statusText}_`);
+            } catch (err) {
+                console.error("Erro ao atualizar status:", err);
+                await reply(sock, from, "❌ Falha ao atualizar status.");
+            }
+            break;
+
         case "marca":
             if (!from.endsWith("@g.us") && !from.endsWith("@lid")) {
                 await reply(sock, from, "❌ Este comando só pode ser usado em grupos.");
@@ -1363,16 +1378,18 @@ async function responderPalavrasChave(sock, text, from, normalized) {
     const msg = text.toLowerCase();
 
     if (msg === "prefixo") {
-    // Reage à mensagem
-    await reagirMensagem(sock, normalized, "🏮");
-
-    // Envia reply QUOTANDO a mensagem original
-    await reply(sock, from, `🤖 Olá! Meu prefixo é: ${prefix}`, normalized);
-
-    return true;
-}
-
-  
+        // Reage à mensagem
+        await reagirMensagem(sock, normalized, "🏮");
+        // Envia reply QUOTANDO a mensagem original
+        await reply(sock, from, `🤖 Olá! Meu prefixo é: ${prefix}`);
+        return true;
+    }
+    
+    if (msg === "ola") {
+        await reagirMensagem(sock, normalized, "👋");
+        await reply(sock, from, "Olá! Como posso ajudar?");
+        return true;
+    }
 
     // você pode adicionar mais palavras-chave aqui
     // ex: if(msg === "ajuda") { ... }
