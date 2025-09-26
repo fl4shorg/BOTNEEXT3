@@ -130,11 +130,11 @@ async function contarGrupos(sock) {
 // Função para contar comandos
 // ---------------------------
 function contarComandos() {
-    // Baseado na análise do código, temos 18 comandos implementados
+    // Baseado na análise do código, temos os comandos implementados
     const comandos = [
         'ping', 'hora', 'dono', 'marca', 'recado', 's', 'hermitwhite', 'prefixo',
         'antilink', 'brat', 'pinterest', 'rename', 'akinator', 'resetaki', 'instagram',
-        'ig', 'menu' // incluindo o novo comando menu
+        'ig', 'menu', 'status' // incluindo todos os comandos
     ];
     return comandos.length;
 }

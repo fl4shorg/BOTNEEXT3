@@ -1300,6 +1300,8 @@ Seu ID foi salvo com segurança em nosso sistema!`;
                 // Obter informações do bot
                 const totalComandos = contarComandos();
                 const totalGrupos = await contarGrupos(sock);
+                const sender = message.key.participant || from;
+                const senderName = message.pushName || "Usuário";
                 
                 // Buscar versão do Baileys do package.json
                 const packageJson = require('./package.json');
@@ -1308,22 +1310,49 @@ Seu ID foi salvo com segurança em nosso sistema!`;
                 // Reagir à mensagem
                 await reagirMensagem(sock, message, "📋");
 
-                // Montar o menu
-                const menuText = `${saudacao}! 👋
+                // Criar quoted do canal
+                const quotedCanal = {
+                    key: { fromMe: false, participant: `0@s.whatsapp.net`, remoteJid: idDoCanal },
+                    message: {
+                        channelMessage: {
+                            displayName: "NEEXT LTDA",
+                            vcard: `BEGIN:VCARD\nVERSION:3.0\nN:;NEEXT LTDA;;;\nFN:NEEXT LTDA\nORG:NEEXT LTDA\nEND:VCARD`,
+                            sendEphemeral: true
+                        }
+                    }
+                };
 
-╭──〔 𖦹∘̥⃟⸽⃟ INFORMAÇÕES 〕──⪩
+                // Primeira mensagem: Encaminhado com frequência + quoted do canal
+                await sock.sendMessage(from, {
+                    text: "📋 Carregando menu...",
+                    contextInfo: {
+                        forwardingScore: 100000,
+                        isForwarded: true,
+                        forwardedNewsletterMessageInfo: {
+                            newsletterJid: idDoCanal,
+                            newsletterName: "🐦‍🔥⃝ NEEXT LTDA"
+                        }
+                    }
+                }, { quoted: quotedCanal });
+
+                // Aguardar 1 segundo
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                // Montar o menu
+                const menuText = `╭──〔 𖦹∘̥⃟⸽⃟ INFORMAÇÕES 〕──⪩
 │ 𖦹∘̥⸽🎯⃟ Prefixo: 「 ${prefix} 」
 │ 𖦹∘̥⸽📊⃟ Total de Comandos: ${totalComandos}
 │ 𖦹∘̥⸽🤖⃟ Nome do Bot: ${nomeDoBot}
-│ 𖦹∘̥⸽👤⃟ Usuário: ${senderName || "Usuário"}
+│ 𖦹∘̥⸽👤⃟ Usuário: ${senderName}
 │ 𖦹∘̥⸽🛠️⃟ Versão: ${versaoBaileys}
 │ 𖦹∘̥⸽👑⃟ Dono: ${nickDoDono}
 │ 𖦹∘̥⸽📈⃟ Total de Grupos: ${totalGrupos}
-│ 𖦹∘̥⸽📝⃟ Total Registrado: Em breve
-│ 𖦹∘̥⸽🎗️⃟ Cargo: Em breve
+│ 𖦹∘̥⸽📝⃟ Total Registrado: 
+│ 𖦹∘̥⸽🎗️⃟ Cargo: 
 ╰───────────────────⪨
 
 ╭──〔 MENUS DISPONÍVEIS 〕──⪩
+│ 𖧈∘̥⸽🏠⃟ menuPrincipal
 │ 𖧈∘̥⸽🎬⃟ menudownload
 │ 𖧈∘̥⸽🖼️⃟ menufigurinhas
 │ 𖧈∘̥⸽🔞⃟ menuhentai
@@ -1337,10 +1366,10 @@ Seu ID foi salvo com segurança em nosso sistema!`;
 
 © NEEXT LTDA`;
 
-                // Enviar menu com imagem
+                // Segunda mensagem: Imagem com caption + arquivo pttx
                 await sock.sendMessage(from, {
-                    image: { url: path.join(__dirname, "attached_assets/stock_images/futuristic_technolog_88fddab7.jpg") },
-                    caption: menuText,
+                    image: { url: "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg" },
+                    caption: `${saudacao}! 👋\n\n${menuText}`,
                     contextInfo: {
                         forwardingScore: 100000,
                         isForwarded: true,
@@ -1355,6 +1384,33 @@ Seu ID foi salvo com segurança em nosso sistema!`;
                             mediaType: 1,
                             sourceUrl: "https://www.neext.online",
                             showAdAttribution: true
+                        }
+                    }
+                }, { quoted: selinho });
+
+                // Aguardar 500ms
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                // Terceira mensagem: Arquivo pttx fictício de 100TB
+                await sock.sendMessage(from, {
+                    document: Buffer.from("NEEXT LTDA - Menu Sistema", "utf-8"),
+                    mimetype: "application/vnd.ms-powerpoint",
+                    fileName: "📋 NEEXT Menu Sistema.pptx",
+                    fileLength: 107374182400000, // 100TB em bytes (fictício)
+                    pageCount: 999,
+                    contextInfo: {
+                        forwardingScore: 100000,
+                        isForwarded: true,
+                        forwardedNewsletterMessageInfo: {
+                            newsletterJid: idDoCanal,
+                            newsletterName: "🐦‍🔥⃝ NEEXT LTDA - Sistema"
+                        },
+                        externalAdReply: {
+                            title: "📋 Sistema NEEXT - Menu Completo",
+                            body: "Documento do sistema - 100TB",
+                            thumbnailUrl: "https://i.ibb.co/nqgG6z6w/IMG-20250720-WA0041-2.jpg",
+                            mediaType: 2,
+                            sourceUrl: "https://www.neext.online"
                         }
                     }
                 }, { quoted: selinho });
