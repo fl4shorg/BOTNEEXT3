@@ -1294,14 +1294,16 @@ Seu ID foi salvo com segurança em nosso sistema!`;
 
         case "menu": {
             try {
+                // Definir variáveis básicas primeiro
+                const sender = message.key.participant || from;
+                const senderName = message.pushName || "Usuário";
+                
                 // Obter saudação baseada no horário
                 const saudacao = obterSaudacao();
                 
                 // Obter informações do bot
                 const totalComandos = contarComandos();
                 const totalGrupos = await contarGrupos(sock);
-                const sender = message.key.participant || from;
-                const senderName = message.pushName || "Usuário";
                 
                 // Buscar versão do Baileys do package.json
                 const packageJson = require('./package.json');
